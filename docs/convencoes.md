@@ -1,26 +1,25 @@
 **Idioma de desenvolvimento:**
 
-    EN
+   *EN*
 
 **Nomenclaturas:**
 
-    **Pastas:**
+  * Pastas:
 
-        - minusculo-minusculo
+      - minusculo-minusculo
 
-    **Arquivos:**
+  * Arquivos:
 
-        - camelCase
+      - camelCase
 
-    **Classes:**
+  * Classes:
 
-        - CamelCase
+      - CamelCase
 
-   **Funções:**
+  * Funções:
 
-        - minusculo_minusculo
+    - minusculo_minusculo
 
-    **Variaveis:**
+  * Variaveis:
     
-        - camelCase
-
+       - camelCase
