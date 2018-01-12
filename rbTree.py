@@ -6,9 +6,15 @@ class Tree(Node):
     def __init__(self):
         self._none = Nil()
         self._root = self._none
-        self._view = ''
+        self._carry = {}
         self._maior = 0
         self._x = 0
+
+    def getRoot(self):
+        return self._root
+
+    def getNone(self):
+        return self._none
 
     def __repr__(self):
         return 'Tree', self._root
@@ -61,6 +67,8 @@ class Tree(Node):
             if y.getColor() == 'black':
                 self.rbDeleteFixup(x)
             return y
+        else:
+            return None
 
     def maximum(self, node):
         while node.getRight() != self._none:
@@ -199,66 +207,18 @@ class Tree(Node):
         return y
 
     #views
-    def inOrderPrint(self):
+    def inOrderGet(self):
         if self._root is not self._none:
             rainode = self._root
             self.inOrder(rainode)
-            out = self._view
-            self._view = ''
+            out = self._carry
+            self._carry = {}
             return out
         else:
-            return '0 '
+            return None
 
     def inOrder(self, node):
         if node != self._none:
             self.inOrder(node.getLeft())
-            self._view += str(node) + ' '
+            self._carry[str(node.getKey())] = node.getData()
             self.inOrder(node.getRight()) 
-
-    def inPreOrderPrint(self):
-        if self._root is not self._none:
-            rainode = self._root
-            self.inPreOrder(rainode)
-            out = self._view
-            self._view = ''
-            return out
-        else:
-            return '0 '
-
-    def inPreOrder(self, node):
-        if node != self._none:
-            self._view += str(node) + ' '
-            self.inPreOrder(node.getLeft())           
-            self.inPreOrder(node.getRight()) 
-
-    def inPostOrderPrint(self):
-        if self._root is not self._none:
-            rainode = self._root
-            self.inPostOrder(rainode)
-            out = self._view
-            self._view = ''
-            return out
-        else: 
-            return '0 '
-
-    def inPostOrder(self, node):
-        if node != self._none:            
-            self.inPostOrder(node.getLeft())           
-            self.inPostOrder(node.getRight()) 
-            self._view += str(node) + ' '
-
-    def greaterLess(self, value):
-        node = self._root
-        self._x = value
-        self.inorderTreeWalk2(node)
-        out = self._maior
-        self._maior = 0
-        self._x = 0 
-        return out
-
-    def inorderTreeWalk2(self, node):
-        if node != self._none:
-            self.inorderTreeWalk2(node.getLeft())
-            if node.getKey() > self._maior and node.getKey() < self._x:
-                self._maior = node.getKey()
-            self.inorderTreeWalk2(node.getRight())
