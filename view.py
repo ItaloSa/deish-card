@@ -25,16 +25,15 @@ while True:
         print("You total limit is: %.2f" % (card[1]["totalLimit"]))
         print("Enjoy")
     
-    if userChoice == "2":
+    elif userChoice == "2":
         stores +=1
+        storeName = input("Your store name: ")
+        storeAdress = input("Adress: ")
+        operatingHours = input("Operating Hours: (This format HH.MM - HH.MM) 00.00 to 23.59")
+        store = store_register(stores, storeName, storeAdress, operatingHours)
+        print("%s has been successfully registered!" % (store[1]["name"]))
+        print("Your store number is : %d"%(store[0]))
+        print("Enjoy")
         
-                
-            
-        
-        
-        
-
-
-
 
 
