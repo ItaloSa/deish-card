@@ -2,28 +2,48 @@ from rbTree import Tree
 import os
 import json
 
-class DeishDb():
+class Controller():
+    def __init__(self, path):
+        self.__path = path
+        self.__boot = self.initializer()
 
-    def __init__(self):
-        self._colections = {}
-        self.__path = 'deish-db'
-        self.__initializer = self.initializer()
-    
     def initializer(self):
         if self.path_exists(self.__path):
             print('db ja existe')
             #recuperar banco de dados
         else:
-            path = self.__path + '/config.json'
+            path = self.__path + '/aDeishConfig.json'
             config = json.dumps({
                 'colections': {}    
                 }
-            )  
+            )
             configFile = open(path, 'w')
             configFile.write(config)
             configFile.close()
-    
+                
+    def path_exists(self, path):
+        if not os.path.exists(path):
+            os.mkdir(path)
+            return False
+        else:
+            return True
+
+    def new_arq(self, name):
+        arq = open(name, 'w')
+        arq.close()
+
+class DeishDb():
+
+    def __init__(self, path='deish-db'):
+        self._colections = {}
+        self.__path = path
+        self.__controller = Controller(path)
+
+    def deish(self):
+        return {'mensage': "Hello, i'm here! i'm in version pre-alpha. Enjoy, but be careful :-)"}
+
     def get_colections(self):
+        #lista de colecoes
         return self._colections
     
     def colection_exists(self, colection):
@@ -32,25 +52,17 @@ class DeishDb():
         else:
             return True
         
-    def path_exists(self, path):
-        if not os.path.exists(path):
-            os.mkdir(path)
-            return False
-        else:
-            return True
-
     def new_colection(self, colection):
         if not self.colection_exists(colection):
-            path = self.__path + '/' + colection
+            path = self.__path + '/' + colection + '.json'
             self._colections[colection] = {'tree': Tree(), 'path': path}
-            self.path_exists(path)
+            self.__controller.new_arq(path)
             print('Colection created')
-            return 'Colection created'
+            return {'mensage': 'Colection created'}
         else:
             print('Colection exists')
-            return 'Colection exists'
+            return {'mensage': 'Colection exists'}
         
-    #crud component
     def push(self, colection, key, data):
         if self.colection_exists(colection):
             colectionSrc = self._colections[colection]['tree']
@@ -79,6 +91,7 @@ class DeishDb():
         if self.colection_exists(colection):
             colectionSrc = self._colections[colection]['tree'].search(key).getData()
             colectionSrc.update(data)
+            return {'mensage': 'Ok'}
         else:
             return {'mensage': 'Not Found'}
     

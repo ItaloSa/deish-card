@@ -4,6 +4,7 @@ from deish import DeishDb
 db = DeishDb()
 db.new_colection('caio')
 db.push('caio', 123, {'mensage': 'hello world'})
+db.push('caio', 124, {'mensage': 'hello 2 world'})
 y = db.get('caio', 123)
 print(y)
 db.update('caio', 123, {'mensage': 'hello', 'time': 22})
