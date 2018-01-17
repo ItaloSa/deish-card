@@ -4,23 +4,8 @@ import json
 
 class Controller():
     def __init__(self, path):
-        self.__path = path
-        self.__boot = self.initializer()
-
-    def initializer(self):
-        if self.path_exists(self.__path):
-            print('db ja existe')
-            #recuperar banco de dados
-        else:
-            path = self.__path + '/aDeishConfig.json'
-            config = json.dumps({
-                'colections': {}    
-                }
-            )
-            configFile = open(path, 'w')
-            configFile.write(config)
-            configFile.close()
-                
+        self.__path = path + '/aDeishConfig.json'
+               
     def path_exists(self, path):
         if not os.path.exists(path):
             os.mkdir(path)
@@ -28,9 +13,34 @@ class Controller():
         else:
             return True
 
-    def new_arq(self, name):
-        arq = open(name, 'w')
+    def save_data(self, colections):
+        out = {'colections': {}}
+        try:
+            for colection in colections:
+                carry = colections[colection]['tree'].inOrderGet()
+                out['colections'].update({colection: carry})
+            
+            arq = open(self.__path, "w", encoding="utf-8")
+            arq.write(json.dumps(out))
+            arq.close()
+
+        except:
+            print('error')
+    
+    def load_data(self):
+        arq = open(self.__path, "r", encoding="utf-8")
+        carry = arq.readline()
         arq.close()
+
+        data = json.loads(carry)
+        colections = {}
+        for colection in data['colections']:
+            tree = Tree()
+            for item in data['colections'][colection]:
+                tree.add(int(item), data['colections'][colection][item])
+            colections[colection] = {'tree': tree}
+
+        return colections
 
 class DeishDb():
 
@@ -38,6 +48,22 @@ class DeishDb():
         self._colections = {}
         self.__path = path
         self.__controller = Controller(path)
+        self.initializer()
+
+    def initializer(self):
+        if self.__controller.path_exists(self.__path + '/aDeishConfig.json'):
+            print('db ja existe')
+            colections = self.__controller.load_data()
+            self._colections = colections
+        else:
+            path = self.__path 
+            config = json.dumps({
+                'colections': {}    
+                }
+            )
+            configFile = open(path, 'w')
+            configFile.write(config)
+            configFile.close()
 
     def deish(self):
         return {'mensage': "Hello, i'm here! i'm in version pre-alpha. Enjoy, but be careful :-)"}
@@ -55,13 +81,15 @@ class DeishDb():
     def new_colection(self, colection):
         if not self.colection_exists(colection):
             path = self.__path + '/' + colection + '.json'
-            self._colections[colection] = {'tree': Tree(), 'path': path}
-            self.__controller.new_arq(path)
+            self._colections[colection] = {'tree': Tree()}
             print('Colection created')
             return {'mensage': 'Colection created'}
         else:
             print('Colection exists')
             return {'mensage': 'Colection exists'}
+
+    def close(self):
+        self.__controller.save_data(self._colections)
         
     def push(self, colection, key, data):
         if self.colection_exists(colection):
