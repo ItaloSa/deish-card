@@ -1,42 +1,48 @@
 class RBNode():
-    def __init__(self,Key):
+    def __init__(self, Key):
         self.__Key = Key
         self.__left = None
         self.__right = None
         self.__pai = None
         self.__cor = "black"
         self.__dados = {}
-        
-    def getdado(self):
+
+    def getDado(self):
         return self.__dados
-    def setdados(self,chave,mudanca):
+
+    def setdados(self, chave, mudanca):
         self.__dados[chave] = mudanca
-        
-        
+
     def getKey(self):
         return self.__Key
-    def setKey(self,novoKey):
+
+    def setKey(self, novoKey):
         self.__Key = novoKey
-    
+
     def getFilhoEsquerdo(self):
         return self.__left
-    def setFilhoEsquerdo(self,novoFilho):
+
+    def setFilhoEsquerdo(self, novoFilho):
         self.__left = novoFilho
-    
+
     def getFilhoDireito(self):
         return self.__right
-    def setFilhoDireito(self,Novofilho):
+
+    def setFilhoDireito(self, Novofilho):
         self.__right = Novofilho
-    
+
     def getPai(self):
         return self.__pai
-    def setPai(self,novoPai):
+
+    def setPai(self, novoPai):
         self.__pai = novoPai
-        
+
     def getCor(self):
         return self.__cor
-    def setCor(self,cor):
+
+    def setCor(self, cor):
         self.__cor = cor
+
 
 class RBTree():
     def __init__(self):
@@ -45,54 +51,57 @@ class RBTree():
         self.__none.setFilhoEsquerdo(self.__none)
         self.__none.setPai(self.__none)
         self.__raiz = self.__none
-    
+        self.__carry = {}
+
     def getRaiz(self):
         return self.__raiz
-    def setRaiz(self,novaRaiz):
+
+    def setRaiz(self, novaRaiz):
         self.__raiz = novaRaiz
-    
+
     def getNone(self):
         return self.__none
-    
-    def inorder_Tree_Walk(self,x):
+
+    def inorder_Tree_Walk(self, x):
         if x != self.__none:
             self.inorder_Tree_Walk(x.getFilhoEsquerdo())
-            print(x.getKey(),x.getCor())
+            print(x.getKey(), x.getCor())
             self.inorder_Tree_Walk(x.getFilhoDireito())
-    
-    def preorder_tree_Walk(self,x):
+
+    def preorder_tree_Walk(self, x):
         if x != self.__none:
-            print(x.getKey(),x.getCor())
+            print(x.getKey(), x.getCor())
             self.preorder_tree_Walk(x.getFilhoEsquerdo())
             self.preorder_tree_Walk(x.getFilhoDireito())
-    def tree_Minimum(self,nodo):
+
+    def tree_Minimum(self, nodo):
         while nodo.getFilhoEsquerdo() != self.getNone():
             nodo = nodo.getFilhoEsquerdo()
         return nodo
-    
-    def tree_Maximum(self,nodo):
+
+    def tree_Maximum(self, nodo):
         while nodo.getFilhoDireito() != self.getNone():
             nodo = nodo.getFilhoDireito()
         return nodo
-    
-    def tree_Sucessor(self,nodo):
-        if nodo.getFilhoDireito()!= self.getNone():
+
+    def tree_Sucessor(self, nodo):
+        if nodo.getFilhoDireito() != self.getNone():
             return self.tree_Minimum(nodo.getFilhoDireito())
         y = nodo.getPai()
         while y != self.getNone() and nodo == y.getFilhoDireito():
             nodo = y
             y = y.getPai()
         return y
-    
-    def recursive_tree_search(self,x,value):
+
+    def recursive_tree_search(self, x, value):
         if x == self.__none or value == x.getKey():
-            return x        
+            return x
         if value < x.getKey():
             return self.recursive_tree_search(x.getFilhoEsquerdo(), value)
         else:
             return self.recursive_tree_search(x.getFilhoDireito(), value)
-    
-    def rightRotate(self,nodo):
+
+    def rightRotate(self, nodo):
         y = nodo.getFilhoEsquerdo()
         nodo.setFilhoEsquerdo(y.getFilhoDireito())
         if y.getFilhoDireito() != self.__none:
@@ -106,11 +115,11 @@ class RBTree():
             nodo.getPai().setFilhoEsquerdo(y)
         y.setFilhoDireito(nodo)
         nodo.setPai(y)
-        
-    def leftRotate(self,nodo):
+
+    def leftRotate(self, nodo):
         y = nodo.getFilhoDireito()
         nodo.setFilhoDireito(y.getFilhoEsquerdo())
-        if y.getFilhoEsquerdo()!= self.__none:
+        if y.getFilhoEsquerdo() != self.__none:
             y.getFilhoEsquerdo().setPai(nodo)
         y.setPai(nodo.getPai())
         if nodo.getPai() == self.__none:
@@ -120,9 +129,9 @@ class RBTree():
         else:
             nodo.getPai().setFilhoDireito(y)
         y.setFilhoEsquerdo(nodo)
-        nodo.setPai(y)   
-    
-    def RBInsert(self,nodo):
+        nodo.setPai(y)
+
+    def RBInsert(self, nodo):
         y = self.__none
         x = self.getRaiz()
         while x != self.__none:
@@ -134,7 +143,7 @@ class RBTree():
         nodo.setPai(y)
         if y == self.__none:
             self.setRaiz(nodo)
-        elif nodo.getKey()< y.getKey():
+        elif nodo.getKey() < y.getKey():
             y.setFilhoEsquerdo(nodo)
         else:
             y.setFilhoDireito(nodo)
@@ -142,9 +151,8 @@ class RBTree():
         nodo.setFilhoEsquerdo(self.__none)
         nodo.setCor("red")
         self.RB_Insert_Fixup(nodo)
-        
-    
-    def RB_Insert_Fixup(self,nodo):
+
+    def RB_Insert_Fixup(self, nodo):
         while nodo.getPai().getCor() == "red":
             if nodo.getPai() == nodo.getPai().getPai().getFilhoEsquerdo():
                 y = nodo.getPai().getPai().getFilhoDireito()
@@ -175,18 +183,18 @@ class RBTree():
                     nodo.getPai().getPai().setCor("red")
                     self.leftRotate(nodo.getPai().getPai())
         self.getRaiz().setCor("black")
-        
-    def transplant(self,u,v):
+
+    def transplant(self, u, v):
         if u.getPai() == self.__none:
             self.setRaiz(v)
         elif u == u.getPai().getFilhoEsquerdo():
             u.getPai().setFilhoEsquerdo(v)
         else:
             u.getPai().setFilhoDireito(v)
-        
+
         v.setPai(u.getPai())
-    
-    def RBDelete(self,nodo):
+
+    def RBDelete(self, nodo):
         y = nodo
         yCorOriginal = y.getCor()
         if nodo.getFilhoEsquerdo() == self.__none:
@@ -211,14 +219,12 @@ class RBTree():
             y.setCor(nodo.getCor())
         if yCorOriginal == "black":
             self.deleteFix(x)
-            
-       
-       
-    def RB_Delete_Fixup(self,nodo):
+
+    def RB_Delete_Fixup(self, nodo):
         while nodo != self.getRaiz() and nodo.getCor() == "black":
             if nodo == nodo.getPai().getFilhoEsquerdo():
                 w = nodo.getPai().getFilhoDireito()
-                if w.getCor()=="red":
+                if w.getCor() == "red":
                     w.setCor("black")
                     nodo.getPai().setCor("red")
                     self.leftRotate(nodo.getPai())
@@ -239,7 +245,7 @@ class RBTree():
                     nodo = self.getRaiz()
             else:
                 w = nodo.getPai().getFilhoEsquerdo()
-                if w.getCor()=="red":
+                if w.getCor() == "red":
                     w.setCor("black")
                     nodo.getPai().setCor("red")
                     self.rightRotate(nodo.getPai())
@@ -259,10 +265,10 @@ class RBTree():
                     self.rightRotate(nodo.getPai())
                     nodo = self.getRaiz()
         nodo.setCor("black")
-        
-    def deleteFix(self,x):
+
+    def deleteFix(self, x):
         while x != self.getRaiz() and x.getCor() == "black":
-            if x== x.getPai().getFilhoEsquerdo():
+            if x == x.getPai().getFilhoEsquerdo():
                 w = x.getPai().getFilhoDireito()
                 if w.getCor() == "red":
                     w.setCor("black")
@@ -271,7 +277,7 @@ class RBTree():
                     w = x.getPai().getFilhoDireito()
                 if w.getFilhoEsquerdo().getCor() == "black" and w.getFilhoDireito().getCor() == "black":
                     w.setCor("red")
-                    x = x.getPai()                    
+                    x = x.getPai()
                 else:
                     if w.getFilhoDireito().getCor() == "black":
                         w.getFilhoEsquerdo().setCor("black")
@@ -292,7 +298,7 @@ class RBTree():
                     w = x.getPai().getFilhoEsquerdo()()
                 if w.getFilhoDireito().getCor() == "black" and w.getFilhoEsquerdo().getCor() == "black":
                     w.setCor("red")
-                    x = x.getPai()                    
+                    x = x.getPai()
                 else:
                     if w.getFilhoEsquerdo().getCor() == "black":
                         w.getFilhoDireito().setCor("black")
@@ -305,12 +311,26 @@ class RBTree():
                     self.rightRotate(x.getPai())
                     x = self.getRaiz()
         x.setCor("black")
-        
-    def inorder(self,x):
+
+    def inorder(self, x):
         if x != self.__none:
-            self.inorder_Tree_Walk(x.getFilhoEsquerdo())
-            print(("Loja:%d Valor: %.2f")%(x.getKey(),x.getdado()["receivableAmount"]))
-            self.inorder_Tree_Walk(x.getFilhoDireito())
-            
-            
-            
+            self.inorder(x.getFilhoEsquerdo())
+            print(("Loja:%d Valor: %.2f") %
+                  (x.getKey(), x.getDado()["receivableAmount"]))
+            self.inorder(x.getFilhoDireito())
+
+    def inOrderGet(self):
+        if self.__raiz is not self.__none:
+            root = self.__raiz
+            self.getData(root)
+            out = self.__carry
+            self.__carry = {}
+            return out
+        else:
+            return None
+
+    def getData(self, node):
+        if node != self.__none:
+            self.getData(node.getFilhoEsquerdo())
+            self.__carry[str(node.getKey())] = node.getDado()
+            self.getData(node.getFilhoDireito())
