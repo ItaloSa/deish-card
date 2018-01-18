@@ -1,161 +1,183 @@
 from atuante import *
+import os
 
+clear = lambda: os.system('cls')
 
-print(('welcome to deish credit card system').upper())
-print('PRESS 1: TO CARD REGISTER')
-print('PRESS 2: TO REGISTER YOUR STORE')
-print('PRESS 3: MAKE A PURCHASE')
-print('PRESS 4: TO MAKE A RELATORY')
-print('PRESS 5: TO CLOSE THE SYSTEM')
+def show_menu():
+    print('▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄')
+    print('█       DEISH CREDIT CARD SYSTEM       █')
+    print('█                                      █')
+    print('█ PRESS 1: TO CARD REGISTER            █')
+    print('█ PRESS 2: TO REGISTER YOUR STORE      █')
+    print('█ PRESS 3: MAKE A PURCHASE             █')
+    print('█ PRESS 4: TO MAKE A RELATORY          █')
+    print('█ PRESS 5: TO CLOSE THE SYSTEM         █')
+    print('█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█')
 
+def card_registration():
+    print('╔ CARD REGISTRATION')
+    flag = input("║ Card Flag: ")
+    client_Name = input("║ Your Name: ")
+    while True:
+        totalLimit = input("║ Input your monthly income (only numbers): ")
+        if int(totalLimit):
+            break
+    card = card_register(cards, flag, client_Name, totalLimit)
+    print('║')
+    print("║ %s Your Credit card has been successfully registered!" % (card[1]["name"]))
+    print("║ Your card number is : %d"%(card[0]))
+    print("║ You total limit is: %.2f" % (card[1]["totalLimit"]))
+    print("╚ Enjoy")
+    x = input('\n PRESS RETURN TO EXIT... ')
 
-while True:    
-    userChoice = input("PRESS 1, 2, 3, 4 OR 5: ")
-    if userChoice == "1":
-        cards+=1
-        flag = input("Card Flag: ")
-        client_Name = input("Your Name: ")
-        while True:
-            totalLimit = input("Input your monthly income:(ONLY NUMBERS): ")
-            if int(totalLimit):
+def store_registration():
+    print('╔ STORE REGISTRATION')
+    storeName = input("║ Your store name: ")
+    storeAdress = input("║ Adress: ")
+    while True:
+        openTime = input("║ Opening time (Only Hours. Ex: 01 to 24): ")
+        if int(openTime):
+            closeTime = input("║ Close time: (Only Hours. Ex: 01 to 24): ")
+            if int(closeTime):
                 break
-        card = card_register(cards, flag, client_Name, totalLimit)
-        print("%s Your Credit card has been successfully registered!" % (card[1]["name"]))
-        print("Your card number is : %d"%(card[0]))
-        print("You total limit is: %.2f" % (card[1]["totalLimit"]))
-        print("Enjoy")
-    
-    elif userChoice == "2":
-        stores +=1
-        storeName = input("Your store name: ")
-        storeAdress = input("Adress: ")
-        while True:
-            openTime = input("Opening time: (Only Hours: ) 01 to 23:")
-            if int(openTime):
-                closeTime = input("Close time: (Only Hours: ) 01 to 24:")
-                if int(closeTime):
-                    break
-        
-        store = store_register(stores, storeName, storeAdress, int(openTime), int(closeTime))
-        print("%s has been successfully registered!" % (store[1]["name"]))
-        print("Your store number is : %d"%(store[0]))
-        print("Enjoy")
-        
-    elif userChoice == "3":
-        while True:
-            storeBuy = input("ENTER STORE ID OR X TO RETURN:")
-            if storeBuy =="X":
-                break
-            if int(storeBuy):
-                atualStore = store_search(int(storeBuy))
-                if atualStore:
-                    hourVerify = hour_verify(atualStore[1])
-                    if hourVerify:
-                        while True:
-                            cardId = input("ENTER YOUR CARD ID OR X TO RETURN : ")
-                            if cardId == "X":
-                                break
-                            if int(cardId):
-                                atualCard = cards_serach(int(cardId))
-                                if atualCard:
-                                    while True:
-                                        purchaseValue = input("The value of the purchase: ")
-                                        if float(purchaseValue):
-                                            limit = limit_verify(atualCard[1])                                          
-                                            if limit >= float(purchaseValue):
-                                                ob1 = card_func(float(purchaseValue), atualCard[1])
-                                                ob2 = store_func(float(purchaseValue), atualStore[1])
-                                                print("Purchase made successfully.")
-                                                break
-                                            else:
-                                                print("insufficient limit")
-                                                break
+    print('║')
+    store = store_register(stores, storeName, storeAdress, int(openTime), int(closeTime))
+    print("║ %s has been successfully registered!" % (store[1]["name"]))
+    print("║ Your store number is : %d"%(store[0]))
+    print("╚ Enjoy")
+    x = input('\n PRESS RETURN TO EXIT... ')
 
-                                        else:
-                                            print("invalid value")
-                                        
-                                
+def purchase():
+    print('╔ PURCHASE')
+    while True:
+        storeBuy = input("║ ENTER STORE ID OR X TO RETURN TO HOME: ")
+        if storeBuy == 'X' or storeBuy == 'x':
+            break
+        if int(storeBuy):
+            atualStore = store_search(int(storeBuy))
+            if atualStore:
+                hourVerify = hour_verify(atualStore[1])
+                if hourVerify:                
+                    cardId = input("║ ENTER YOUR CARD ID OR X TO RETURN: ")
+                    if cardId == 'X' or cardId == 'x':
+                        break
+                    if int(cardId):
+                        atualCard = cards_serach(int(cardId))
+                        if atualCard:
+                            while True:
+                                purchaseValue = input("║ The value of the purchase: ")
+                                if float(purchaseValue):
+                                    limit = limit_verify(atualCard[1])                                          
+                                    if limit >= float(purchaseValue):
+                                        ob1 = card_func(float(purchaseValue), atualCard[1])
+                                        ob2 = store_func(float(purchaseValue), atualStore[1])
+                                        print("║ Purchase made successfully.")
+                                        break
+                                    else:
+                                        print("╠ Insufficient limit!")
+                                        break
                                 else:
-                                    print("card does not exist")
-                                    break 
-                                            
-                                       
-                            else:
-                                print("card does not exist")
-                                break 
-                                
-                        
+                                    print("╠ Invalid value!")                                   
+                        else:
+                            print("╠ Card does not exist!")
+                            break    
                     else:
-                        x = error_time(atualStore[1])
-                        print("You can't do that. %s is closed, come back %.2f to %.2f"%(x[0],x[1],x[2])) 
-                        break              
+                        print("╠ Card does not exist!")
+                        break     
                 else:
-                    print("store does not exist")
-                    break
+                    x = error_time(atualStore[1])
+                    print("╠ You can't do that. %s is closed, come back %.2f to %.2f" %(x[0],x[1],x[2])) 
+                    break              
             else:
-                print("store does not exist")
+                print("╠ Store does not exist")
                 break
+        else:
+            print("╠ Store does not exist")
+            break
+    print('║')
+    x = input('╚ PRESS RETURN TO EXIT... ')
+
+def show_report_menu():
+    print('▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄')
+    print('█          ACCOUNT BALANCE MENU        █')
+    print('█ PRESS 1: TO CARD BALANCE             █')
+    print('█ PRESS 2: TO STORE BALANCE            █')
+    print('█ PRESS 3: PAYMENT BALANCE             █')
+    print('█ PRESS X: TO RETURN TO MAIN MENU      █')
+    print('█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█')
+
+def card_balance():
+    print('╔ CARD BALANCE')
+    cardId = input("║ CARD ID:")
+    if int(cardId):
+        card = cards_serach(int(cardId))
+        if card:
+            exit2 = relatory(card[1])
+            print("║ Your purchases in descending order of value have been: %s" %(exit2))
+        else:
+            print("║ Card not found")                
+    else:
+        print("║ Card not found")
+    print('║')
+    x = input('╚ PRESS RETURN TO EXIT... ')
+
+def store_balance():
+    print('╔ STORE BALANCE')
+    storeId = input("║ STORE ID:")
+    if int(storeId):                
+        store = store_search(int(storeId))
+        if store:
+            exit1 = relatory(store[1])
+            print("╠ Your sales in descending order of value have been: %s" % (exit1)) 
+        else:
+            print("║ Store not found")
+    else:
+        print("║ Store not found")
+    print('║')
+    x = input('╚ PRESS RETURN TO EXIT... ')
+
+def report_menu():
+    while True:
+        clear()
+        show_report_menu()
+        choice = input("» INPUT")
+        if choice == "1":
+            clear()
+            card_balance()
+            break
+        elif choice == "2":
+            store_balance()
+            clear() 
+            break
+        elif choice == "3":
+            payment_relatory()
+            clear()
+            break
+            
+        elif choice == "X":
+            break
+
+while True:
+    clear()      
+    show_menu()    
+    userChoice = input("» INPUT: ")
+    if userChoice == "1":
+        clear()
+        cards+=1
+        card_registration()
+              
+    elif userChoice == "2":
+        clear()
+        stores +=1
+        store_registration()
                 
+    elif userChoice == "3":
+        clear()
+        purchase()              
                 
     elif userChoice == "4":
-        print('PRESS 1: TO CARD RELATORY')
-        print('PRESS 2: TO STORE RELATORY')
-        print('PRESS 3: PAYMENT RELATORY')
-        print('PRESS X: TO GO BACK TO MAIN MENU')
-        while True:
-            choice = input("PRESS 1, 2, 3 or X")
-            if choice == "1":
-                cardId = input("CARD ID:")
-                if int(cardId):
-                    card = cards_serach(int(cardId))
-                    if card:
-                        exit2 = relatory(card[1])
-                        print("Suas compras em ordem decrescente de valor foram : %s"%(exit2))
-                        break
-                    else:
-                        print("card not found")  
-                        break              
-                else:
-                    print("card not found")
-                    break
-            elif choice == "2":
-                storeId = input("STORE ID:")
-                if int(storeId):                
-                    store = store_search(int(storeId))
-                    if store:
-                        exit1 = relatory(store[1])
-                        print("Suas vendas em ordem decresente de valor foram %s" % (exit1))
-                        break
-                    else:
-                        print("store not found")
-                        break
-                else:
-                    print("store not found")
-                    break
-            
-            elif choice == "3":
-                payment_relatory()
-                break
-                
-            elif choice == "X":
-                break
-              
-                
-                
-                
-            
-            
-        
-        
-        
-        
-                
-            
-        
-        
-        
-
-
-
-
-
+        clear()
+        report_menu()
+    
+    elif userChoice == "5":
+        break
