@@ -209,16 +209,15 @@ class Tree(Node):
     #views
     def inOrderGet(self):
         if self._root is not self._none:
-            rainode = self._root
-            self.inOrder(rainode)
-            out = self._carry
-            self._carry = {}
-            return out
+            carry = {}
+            rootNode = self._root
+            self.inOrder(rootNode, carry)
+            return carry
         else:
             return None
 
-    def inOrder(self, node):
+    def inOrder(self, node, carry):
         if node != self._none:
-            self.inOrder(node.getLeft())
-            self._carry[str(node.getKey())] = node.getData()
-            self.inOrder(node.getRight()) 
+            self.inOrder(node.getLeft(), carry)
+            carry[str(node.getKey())] = node.getData()
+            self.inOrder(node.getRight(), carry) 
