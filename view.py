@@ -1,7 +1,8 @@
-from controller import *
+from controller import Store
 import os
 
 clear = lambda: os.system('cls')
+storeClass = Store()
 
 def show_menu():
     print('▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄')
@@ -22,7 +23,7 @@ def card_registration():
         totalLimit = input("║ Input your monthly income (only numbers): ")
         if int(totalLimit):
             break
-    card = card_register(cards, flag, client_Name, totalLimit)
+    card = storeClass.card_register(flag, client_Name, totalLimit)
     print('║')
     print("║ %s Your Credit card has been successfully registered!" % (card[1]["name"]))
     print("║ Your card number is : %d"%(card[0]))
@@ -36,13 +37,13 @@ def store_registration():
     storeAdress = input("║ Adress: ")
     while True:
         openTime = input("║ Opening time (hh:mm): ").split(':')
-        print(openTime)
+        
         if int(openTime[0]):
             closeTime = input("║ Close time: (hh:mm): ").split(':')
             if int(closeTime[0]):
                 break
     print('║')
-    store = store_register(stores, storeName, storeAdress, openTime, closeTime)
+    store = storeClass.store_register(storeName, storeAdress, openTime, closeTime)
     print("║ %s has been successfully registered!" % (store[1]["name"]))
     print("║ Your store number is : %d"%(store[0]))
     print("╚ Enjoy")
@@ -55,23 +56,23 @@ def purchase():
         if storeBuy == 'X' or storeBuy == 'x':
             break
         if int(storeBuy):
-            atualStore = store_search(int(storeBuy))
+            atualStore = storeClass.store_search(int(storeBuy))
             if atualStore:
-                hourVerify = hour_verify(atualStore[1])
+                hourVerify = storeClass.hour_verify(atualStore[1])
                 if hourVerify:                
                     cardId = input("║ ENTER YOUR CARD ID OR X TO RETURN: ")
                     if cardId == 'X' or cardId == 'x':
                         break
                     if int(cardId):
-                        atualCard = cards_serach(int(cardId))
+                        atualCard = storeClass.cards_serach(int(cardId))
                         if atualCard:
                             while True:
                                 purchaseValue = input("║ The value of the purchase: ")
                                 if float(purchaseValue):
-                                    limit = limit_verify(atualCard[1])                                          
+                                    limit = storeClass.limit_verify(atualCard[1])                                          
                                     if limit >= float(purchaseValue):
-                                        ob1 = card_func(float(purchaseValue), atualCard[1])
-                                        ob2 = store_func(float(purchaseValue), atualStore[1])
+                                        ob1 = storeClass.card_func(float(purchaseValue), atualCard[1])
+                                        ob2 = storeClass.store_func(float(purchaseValue), atualStore[1])
                                         print("║ Purchase made successfully.")
                                         break
                                     else:
@@ -86,8 +87,8 @@ def purchase():
                         print("╠ Card does not exist!")
                         break     
                 else:
-                    x = error_time(atualStore[1])
-                    print("╠ You can't do that. %s is closed, come back %.2f to %.2f" %(x[0],x[1],x[2])) 
+                    x = storeClass.error_time(atualStore[1])
+                    print("╠ You can't do that. %s is closed, come back %s to %s" %(x[0],x[1],x[2])) 
                     break              
             else:
                 print("╠ Store does not exist")
@@ -109,31 +110,37 @@ def show_report_menu():
 
 def card_balance():
     print('╔ CARD BALANCE')
-    cardId = input("║ CARD ID:")
+    cardId = input("╠ CARD ID: ")
     if int(cardId):
-        card = cards_serach(int(cardId))
+        card = storeClass.cards_serach(int(cardId))
         if card:
-            exit2 = relatory(card[1])
-            print("║ Your purchases in descending order of value have been: %s" %(exit2))
+            exit2 = storeClass.relatory(card[1])
+            if exit2 is not '':
+                print("║ Your purchases in descending order of value have been: %s" %(exit2))
+            else:
+                print("╠ You don't purchased yet")
         else:
-            print("║ Card not found")                
+            print("╠ Card not found")                
     else:
-        print("║ Card not found")
+        print("╠ Card not found")
     print('║')
     x = input('╚ PRESS RETURN TO EXIT... ')
 
 def store_balance():
     print('╔ STORE BALANCE')
-    storeId = input("║ STORE ID:")
+    storeId = input("╠ STORE ID: ")
     if int(storeId):                
-        store = store_search(int(storeId))
+        store = storeClass.store_search(int(storeId))
         if store:
-            exit1 = relatory(store[1])
-            print("╠ Your sales in descending order of value have been: %s" % (exit1)) 
+            exit1 = storeClass.relatory(store[1])
+            if exit1 is not '':
+                print("╠ Your sales in descending order of value have been: %s" % (exit1))
+            else:
+                print("╠ You don't have any sale")
         else:
-            print("║ Store not found")
+            print("╠ Store not found")
     else:
-        print("║ Store not found")
+        print("╠ Store not found")
     print('║')
     x = input('╚ PRESS RETURN TO EXIT... ')
 
@@ -141,7 +148,7 @@ def report_menu():
     while True:
         clear()
         show_report_menu()
-        choice = input("» INPUT")
+        choice = input("» INPUT: ")
         if choice == "1":
             clear()
             card_balance()
@@ -151,26 +158,25 @@ def report_menu():
             clear() 
             break
         elif choice == "3":
-            payment_relatory()
+            storeClass.payment_relatory()
+            x = input('╚ PRESS RETURN TO EXIT... ')
             clear()
             break
             
-        elif choice == "X":
+        elif choice == "X" or "x":
             break
 
-load_data()
+
 while True:
-    #clear()      
+    clear()      
     show_menu()    
     userChoice = input("» INPUT: ")
     if userChoice == "1":
         clear()
-        cards+=1
         card_registration()
               
     elif userChoice == "2":
         clear()
-        stores +=1
         store_registration()
                 
     elif userChoice == "3":
@@ -182,5 +188,5 @@ while True:
         report_menu()
     
     elif userChoice == "5":
-        save_data()
+        storeClass.save_data()
         break

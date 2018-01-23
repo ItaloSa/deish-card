@@ -312,13 +312,12 @@ class RBTree():
                     x = self.getRaiz()
         x.setCor("black")
 
-    def inorder(self, x):
+    def storeInorder(self, x):
         if x != self.__none:
-            self.inorder(x.getFilhoEsquerdo())
-            print(("Loja:%d Valor: %.2f") %
-                  (x.getKey(), x.getDado()["receivableAmount"]))
-            self.inorder(x.getFilhoDireito())
-
+            self.storeInorder(x.getFilhoEsquerdo())
+            print(("Id: %d - Loja: %s - Valor: %.2f") %(x.getKey(), x.getDado()["name"], x.getDado()["receivableAmount"]))
+            self.storeInorder(x.getFilhoDireito())
+    
     def inOrderGet(self):
         if self.__raiz is not self.__none:
             root = self.__raiz
