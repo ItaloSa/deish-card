@@ -3,6 +3,28 @@ import datetime, json
 from tree import RBTree, RBNode
 import os
 
+class QuickSort():
+    def __init__(self, A, p, r):
+        self._sort = self.quicksort(A, p, r)
+
+    def quicksort(self, A, p, r):
+        if p < r:
+            q = self.partition(A, p, r)
+            self.quicksort(A, p, q - 1)
+            self.quicksort(A, p + 1, r)
+
+
+    def partition(self, a, p, r):
+        x = a[r]
+        i = p - 1
+        for j in range(p, r):
+            if a[j] >= x:
+                i = i + 1
+                a[i], a[j] = a[j], a[i]
+        a[i + 1], a[r] = a[r], a[i + 1]
+
+        return i + 1
+
 class Store():
     def __init__(self):
         self.__cardsTree = RBTree()
@@ -159,30 +181,11 @@ class Store():
         return x
 
 
-    def quicksort(self, A, p, r):
-        if p < r:
-            q = self.partition(A, p, r)
-            self.quicksort(A, p, q - 1)
-            self.quicksort(A, p + 1, r)
-
-
-    def partition(self, a, p, r):
-        x = a[r]
-        i = p - 1
-        for j in range(p, r):
-            if a[j] >= x:
-                i = i + 1
-                a[i], a[j] = a[j], a[i]
-        a[i + 1], a[r] = a[r], a[i + 1]
-
-        return i + 1
-
-
     def relatory(self, nodo):
         string = ""
         x = nodo.getDado()
         lista = x["relatory"]
-        self.quicksort(lista, 0, len(lista) - 1)
+        QuickSort(lista, 0, len(lista) - 1)
         for i in lista:
             string += str(i) + " "
         return string

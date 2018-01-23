@@ -154,10 +154,11 @@ def report_menu():
             card_balance()
             break
         elif choice == "2":
-            store_balance()
-            clear() 
+            clear()
+            store_balance() 
             break
         elif choice == "3":
+            clear()
             storeClass.payment_relatory()
             x = input('╚ PRESS RETURN TO EXIT... ')
             clear()
